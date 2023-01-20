@@ -10,7 +10,7 @@ export async function appRoutes(app: FastifyInstance) {
       weekDays: z.array(z.number().min(0).max(6)),
     });
 
-    const { title, weekDays } = createHabitBody.parse(request.query);
+    const { title, weekDays } = createHabitBody.parse(request.body);
 
     const today = dayjs().startOf("day").toDate();
 
@@ -41,7 +41,9 @@ export async function appRoutes(app: FastifyInstance) {
 
     const possibleHabits = await prisma.habit.findMany({
       where: {
-        created_at: new Date("2023-01-19T00:00:00Z"),
+        created_at: {
+          lte: date,
+        },
         weekDays: {
           some: {
             week_day: weekDay,
@@ -65,7 +67,7 @@ export async function appRoutes(app: FastifyInstance) {
 
     return {
       possibleHabits,
-      completedHabits,
+      completedHabits
     };
   });
 
@@ -78,7 +80,7 @@ export async function appRoutes(app: FastifyInstance) {
 
     const today = dayjs().startOf("day").toDate();
 
-    let day = await prisma.day.findUnique({
+    let day = await prisma.day.findFirst({
       where: {
         date: today,
       },
