@@ -1,8 +1,8 @@
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { api } from "../lib/axios";
 import { generateDatesFromYearBeginning } from "../utils/generate-dates-from-year-beginning";
 import { HabitDay } from "./HabitDay";
-import { api } from "../lib/axios";
-import dayjs from "dayjs";
 
 const weekDays = [
   'D',
@@ -27,13 +27,14 @@ type Summary = {
 }[]
 
 export function SummaryTable() {
+
   const [summary, setSummary] = useState<Summary>([])
 
-  useEffect(() => {
+  useEffect(() =>{
     api.get('summary').then(response => {
       setSummary(response.data)
     })
-  }, [])
+  },[])
 
   return (
     <div className="w-full flex">
@@ -51,7 +52,8 @@ export function SummaryTable() {
       </div>
 
       <div className="grid grid-rows-7 grid-flow-col gap-3">
-        {summaryDates.map(date => {
+        {summary.length &&summaryDates.map((date) => {
+
           const dayInSummary = summary.find(day => {
             return dayjs(date).isSame(day.date, 'day')
           })
@@ -61,17 +63,14 @@ export function SummaryTable() {
               key={date.toString()}
               date={date}
               amount={dayInSummary?.amount}
-              completed={dayInSummary?.completed}
+              defaultCompleted={dayInSummary?.completed}
             />
           )
         })}
 
         {amountOfDaysToFill > 0 && Array.from({ length: amountOfDaysToFill }).map((_, i) => {
           return (
-            <div
-              key={i}
-              className="w-10 h-10 bg-zinc-900 border-2 border-zinc-800 rounded-lg opacity-40 cursor-not-allowed"
-            />
+            <div key={i} className="w-10 h-10 bg-zinc-900 border-2 border-zinc-800 rounded-lg opacity-40 cursor-not-allowed" />
           )
         })}
       </div>

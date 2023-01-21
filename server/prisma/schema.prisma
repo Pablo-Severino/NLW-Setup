@@ -19,7 +19,7 @@ model Habit {
   dayHabits DayHabit[]
   weekDays  HabitWeekDays[]
 
-  @@map("habits")
+  @@map("habit")
 }
 
 model HabitWeekDays {
