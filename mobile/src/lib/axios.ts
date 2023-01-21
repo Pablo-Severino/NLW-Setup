@@ -1,5 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'http://172.29.153.17:19000'
-})
+	baseURL: 'https://habits-api.loca.lt',
+	headers: {
+		'Bypass-Tunnel-Reminder': '', // Serve para ignorar a página padrão do pacote localtunnel, se remover isto, a requisição não vai conseguir retornar os dados
+	},
+});
